@@ -2,16 +2,15 @@
 //
 
 #include "stdafx.h"
-#include "Unknown.h"
-#include "SDL.h"
-#include "Image.h"
-#include "Map.h"
+#include "LD34.h"
 
-#include <iostream>
+GameMode LD34::curMode = MODE_MOVE;
 
-#define TILE_SIZE 16
+Unknown::Map LD34::map(6, 25);
 
-Unknown::Map map(10, 25);
+Player* LD34::player;
+
+Unknown::Graphics::Font* LD34::font;
 
 struct Tile
 {
@@ -20,9 +19,10 @@ struct Tile
 
 	void render(int x, int y)
 	{
-		img->render(x * TILE_SIZE + 256 - 16 * map.mapSize->width / 2, (32 - y) * TILE_SIZE);
+		img->render(x * TILE_WIDTH + 64, (32 - y) * TILE_HEIGHT);
 	}
 };
+
 
 Tile tiles[1];
 
@@ -37,31 +37,56 @@ void init()
 
 	// empty the map
 
-	for (int x = 0; x < map.mapSize->width; x++)
+	for (int x = 0; x < LD34::map.mapSize->width; x++)
 	{
-		for (int y = 0; y < map.mapSize->height; y++)
+		for (int y = 0; y < LD34::map.mapSize->height; y++)
 		{
-			map.setTileID(0, x, y);
+			LD34::map.setTileID(0, x, y);
+		}
+	}
+
+
+	LD34::player = new Player(UK_LOAD_SPRITE("res/player/Player.json"));
+
+
+	LD34::font = new Unknown::Graphics::Font(Unknown::Loader::loadImage("res/Font.png"), "abcdefghijklmnopqrstuvwxyz.,:!", 16);
+
+	UK_ADD_KEY_LISTENER_EXTERNAL(onSwitchMode, "SWITCH_MODE");
+}
+
+void onSwitchMode(Unknown::KeyEvent evnt)
+{
+	if (evnt.SDLCode == SDLK_SPACE)
+	{
+		if (evnt.keyState == Unknown::InputState::PRESSED)
+		{
+			LD34::curMode = (GameMode) ((LD34::curMode + 1) % 2);
 		}
 	}
 }
 
 void render()
 {
-	for (int x = 0; x < map.mapSize->width; x++)
+	UK_DRAW_RECT(0, 0, 512, 35, UK_COLOUR_RGB(200, 200, 200));
+
+	for (int x = 0; x < LD34::map.mapSize->width; x++)
 	{
-		for (int y = map.mapSize->height - 1; y > 0; y--)
+		for (int y = LD34::map.mapSize->height - 1; y > 0; y--)
 		{
-			int tileID = map.getTileID(x, y);
+			int tileID = LD34::map.getTileID(x, y);
 
 			tiles[tileID].render(x, y);
 		}
 	}
+
+	LD34::player->render();
+
+	LD34::font->drawString(LD34::curMode == GameMode::MODE_MOVE ? "mode: move" : "mode: build", 10, 0);
 }
 
 void update()
 {
-
+	LD34::player->update();
 }
 
 int main(int argc, char* argv[])
