@@ -11,6 +11,7 @@
 #include "Font.h"
 
 #include "Player.h"
+#include "CustomEntity.h"
 
 #include <iostream>
 

@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include "LD34.h"
+#include "Timer.h"
+#include "Utils.h"
 
 GameMode LD34::curMode = MODE_MOVE;
 
@@ -11,6 +13,8 @@ Unknown::Map LD34::map(6, 25);
 Player* LD34::player;
 
 Unknown::Graphics::Font* LD34::font;
+
+Unknown::Timer enemySpawn(1);
 
 struct Tile
 {
@@ -87,6 +91,20 @@ void render()
 void update()
 {
 	LD34::player->update();
+
+	if (enemySpawn.isTickComplete())
+	{
+		Unknown::Sprite* enemySpr = UK_LOAD_SPRITE("res/enemy/Enemy.json");
+
+		Enemy* enemy = new Enemy(enemySpr);
+
+		const Unknown::Dimension<int>* screenSize = GET_SCREEN_DIMENSIONS();
+
+		enemy->sprite->location.x = screenSize->width - 20;
+		enemy->sprite->location.y = screenSize->height - 16;
+
+		UK_REGISTER_ENTITY(enemy);
+	}
 }
 
 int main(int argc, char* argv[])

@@ -30,10 +30,10 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
+    <ClInclude Include="LD34.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LD34.h">
+    <ClInclude Include="CustomEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
+    <ClCompile Include="CustomEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

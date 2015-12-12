@@ -2,7 +2,7 @@
 #include "Player.h"
 
 #include "LD34.h"
-#include "Bullet.h"
+#include "CustomEntity.h"
 #include "Loader.h"
 #include "Utils.h"
 
