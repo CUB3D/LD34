@@ -34,11 +34,9 @@ void Bullet::update()
 	if (enemy)
 	{
 		// check for collision
-		std::cout << LD34::player->sprite->bounds.size.width;
-
 		if (Unknown::isAABBIntersecting(LD34::player->sprite->bounds, this->sprite->bounds))
 		{
-			handleCollision(LD34::player);
+			LD34::player->handleCollision(this);
 		}
 	}
 	else

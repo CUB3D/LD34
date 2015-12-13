@@ -6,18 +6,28 @@
 #include "Loader.h"
 #include "Utils.h"
 
-Player::Player(Unknown::Sprite* sprite) : Unknown::HealthEntity(sprite, 10)
+Player::Player(Unknown::Sprite* sprite) : Unknown::HealthEntity(sprite, 10), speedT(5), spriteFlipped("res/player/flipped.png")
 {
 	UK_ADD_MOUSE_LISTENER_INTERNAL(this->onShoot, "PLAYER_SHOOT");
 
 	this->sprite->bounds.size.width = 16;
 	this->sprite->bounds.size.height = 16;
+
+	this->spriteNorm = ((Unknown::Graphics::ImageSprite*)sprite)->image;
 }
 
 void Player::update()
 {
 	if (!this->isAlive())
 		return;
+
+	if (speedT.isTickComplete())
+	{
+		if (speed < maxSpeed)
+		{
+			speed++;
+		}
+	}
 
 	if (LD34::curMode != GameMode::MODE_MOVE)
 	{
@@ -31,14 +41,16 @@ void Player::update()
 	if (mPos.x > this->sprite->location.x)
 	{
 		this->sprite->setAngle(0);
+		((Unknown::Graphics::ImageSprite*)this->sprite)->image = spriteNorm;
 	}
 
 	if (mPos.x < this->sprite->location.x)
 	{
 		this->sprite->setAngle(180);
+		((Unknown::Graphics::ImageSprite*)this->sprite)->image = &spriteFlipped;
 	}
 
-	this->sprite->move(1, 0);
+	this->sprite->move(speed, 0);
 }
 
 void Player::onShoot(Unknown::MouseEvent evnt)
@@ -74,6 +86,15 @@ void Player::onShoot(Unknown::MouseEvent evnt)
 const std::string Player::getEntityID() const
 {
 	return "PLAYER";
+}
+
+void Player::handleCollision(Entity * ent)
+{
+	if (speed > 1)
+	{
+		speed--;
+	}
+	ent->kill();
 }
 
 
