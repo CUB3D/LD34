@@ -80,11 +80,31 @@ void Player::onShoot(Unknown::MouseEvent evnt)
 				}
 				else
 				{
+					if (!placing)
+					{
+						placing = &LD34::tiles[0];
+					}
+
 					Unknown::Point<int> mPos;
 
 					GET_MOUSE_POS(mPos);
 
-					Tile placing = LD34::tiles[1];
+					for (int i = 0; i < TILE_COUNT; i++)
+					{
+						Tile a = LD34::tiles[i + 1];
+						a.img->render(i * TILE_WIDTH + 10, 37);
+
+						int butX = i * TILE_WIDTH + 10;
+						int butY = 37;
+
+						if (mPos.x > butX && mPos.x < butX + TILE_WIDTH)
+						{
+							if (mPos.y > butY && mPos.y < butY + TILE_HEIGHT)
+							{
+								placing = &LD34::tiles[i + 1];
+							}
+						}
+					}
 
 					TilePos* inTile = LD34::isInTile(mPos.x, mPos.y);
 
@@ -92,9 +112,9 @@ void Player::onShoot(Unknown::MouseEvent evnt)
 					{
 						std::cout << inTile->x << " " << inTile->y << std::endl;
 
-						if (LD34::buy(placing.cost))
+						if (LD34::buy(placing->cost))
 						{
-							LD34::map.setTileID(placing.id, inTile->x, inTile->y);
+							LD34::map.setTileID(placing->id, inTile->x, inTile->y);
 						}
 						else
 						{

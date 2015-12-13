@@ -44,6 +44,8 @@ struct TilePos
 
 #define TILE_COUNT 1
 
+class Player;
+
 class LD34
 {
 public:
