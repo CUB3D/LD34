@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "Utils.h"
 #include <sstream>
+#include <ctime>
 
 GameMode LD34::curMode = MODE_MOVE;
 
@@ -17,14 +18,17 @@ Unknown::Graphics::Font* LD34::font;
 
 Unknown::Timer enemySpawn(4);
 
+int LD34::money = 0;
+
 
 Tile LD34::tiles[5];
 
-void createTile(int id, std::string path)
+void createTile(int id, std::string path, int cost)
 {
 	Tile tile;
 
 	tile.id = id;
+	tile.cost = cost;
 	tile.img = new Unknown::Graphics::Image(path.c_str());
 
 	LD34::tiles[id] = tile;
@@ -32,8 +36,10 @@ void createTile(int id, std::string path)
 
 void init()
 {
-	createTile(0, "res/tiles/Tile1.png");
-	createTile(1, "res/tiles/Tile2.png");
+	srand(time(NULL));
+
+	createTile(0, "res/tiles/Tile1.png", 0); // never placed by player
+	createTile(1, "res/tiles/Tile2.png", 10); // wall tile
 
 	// empty the map
 
@@ -48,7 +54,7 @@ void init()
 
 	LD34::player = new Player(UK_LOAD_SPRITE("res/player/Player.json"));
 
-	LD34::font = new Unknown::Graphics::Font(Unknown::Loader::loadImage("res/Font.png"), "abcdefghijklmnopqrstuvwxyz.,:!1234567890", 16);
+	LD34::font = new Unknown::Graphics::Font(Unknown::Loader::loadImage("res/Font.png"), "abcdefghijklmnopqrstuvwxyz.,:!1234567890£", 16);
 
 	UK_ADD_KEY_LISTENER_EXTERNAL(onSwitchMode, "SWITCH_MODE");
 }
@@ -66,7 +72,7 @@ void onSwitchMode(Unknown::KeyEvent evnt)
 
 void render()
 {
-	UK_DRAW_RECT(0, 0, 512, 35, UK_COLOUR_RGB(200, 200, 200));
+	UK_DRAW_RECT(0, 0, 512, 70, UK_COLOUR_RGB(200, 200, 200));
 
 	for (int x = 0; x < LD34::map.mapSize->width; x++)
 	{
@@ -78,7 +84,9 @@ void render()
 		}
 	}
 
-	LD34::font->drawString(LD34::curMode == GameMode::MODE_MOVE ? "mode: move" : "mode: build", 10, 0);
+	std::string modeText = LD34::curMode == GameMode::MODE_MOVE ? "mode: move" : "mode: build";
+
+	LD34::font->drawString(modeText, 10, 0);
 
 	std::stringstream str;
 
@@ -86,7 +94,25 @@ void render()
 
 	LD34::font->drawString("lives: " + str.str(), 10, 16 + 2);
 
+	str = std::stringstream();
+
+	str << LD34::money;
+
+	LD34::font->drawString("£ " + str.str(), 10 + 16 + modeText.length() * 16, 0);
+
 	LD34::player->render();
+
+	for (int i = 0; i < TILE_COUNT; i++)
+	{
+		Tile a = LD34::tiles[i + 1];
+		a.img->render(i * TILE_WIDTH + 10, 37);
+
+		str = std::stringstream();
+
+		str << a.cost;
+
+		LD34::font->drawString("£ " + str.str(), 10 + i * TILE_WIDTH, 37 + 16);
+	}
 }
 
 void update()

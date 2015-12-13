@@ -27,6 +27,7 @@ enum GameMode
 struct Tile
 {
 	int id;
+	int cost;
 	Unknown::Graphics::Image* img;
 
 	void render(int x, int y)
@@ -41,6 +42,8 @@ struct TilePos
 	Tile tile;
 };
 
+#define TILE_COUNT 1
+
 class LD34
 {
 public:
@@ -49,6 +52,7 @@ public:
 	static Player* player;
 	static Unknown::Graphics::Font* font;
 	static Tile tiles[];
+	static int money;
 
 	static TilePos* isInTile(int x_, int y_)
 	{
@@ -77,6 +81,19 @@ public:
 		}
 
 		return NULL;
+	}
+
+	static bool buy(int cost)
+	{
+		if (LD34::money >= cost)
+		{
+			LD34::money -= cost;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 };
 

@@ -84,13 +84,22 @@ void Player::onShoot(Unknown::MouseEvent evnt)
 
 					GET_MOUSE_POS(mPos);
 
+					Tile placing = LD34::tiles[1];
+
 					TilePos* inTile = LD34::isInTile(mPos.x, mPos.y);
 
 					if (inTile)
 					{
 						std::cout << inTile->x << " " << inTile->y << std::endl;
 
-						LD34::map.setTileID(1, inTile->x, inTile->y);
+						if (LD34::buy(placing.cost))
+						{
+							LD34::map.setTileID(placing.id, inTile->x, inTile->y);
+						}
+						else
+						{
+							std::cout << "Cannot afford" << std::endl;
+						}
 					}
 				}
 			}

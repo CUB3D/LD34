@@ -63,6 +63,7 @@ void Bullet::handleCollision(Entity * ent)
 {
 	ent->damage(1);
 	this->kill();
+	LD34::money += (rand() % 6) + 1;
 }
 
 Enemy::Enemy(Unknown::Sprite* sprite) : Unknown::TwoStateEntity(sprite), shoot(3)
@@ -89,7 +90,19 @@ void Enemy::update()
 		UK_REGISTER_ENTITY(bullet);
 	}
 
-	this->sprite->move(-1, 0);
+	auto inTile = LD34::isInTile(this->sprite->location.x, this->sprite->location.y);
+
+	if(inTile)
+	{
+		if (inTile->tile.id != 1)
+		{
+			this->sprite->move(-1, 0);
+		}
+	}
+	else
+	{
+		this->sprite->move(-1, 0);
+	}
 
 	if (this->sprite->location.x <= -this->sprite->bounds.size.width) // if the enemy is off the screen
 	{
