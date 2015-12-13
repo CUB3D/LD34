@@ -48,6 +48,7 @@ void init()
 		for (int y = 0; y < LD34::map.mapSize->height; y++)
 		{
 			LD34::map.setTileID(0, x, y);
+			LD34::map.setData(0, x, y);
 		}
 	}
 
@@ -79,8 +80,17 @@ void render()
 		for (int y = LD34::map.mapSize->height - 1; y > 0; y--)
 		{
 			int tileID = LD34::map.getTileID(x, y);
+			int data = LD34::map.getData(x, y);
 
 			LD34::tiles[tileID].render(x, y);
+
+			if (tileID == 1)
+			{
+				if (data >= 5)
+				{
+					LD34::map.setTileID(0, x, y);
+				}
+			}
 		}
 	}
 

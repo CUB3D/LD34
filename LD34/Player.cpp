@@ -29,6 +29,7 @@ void Player::update()
 		}
 	}
 
+
 	if (LD34::curMode != GameMode::MODE_MOVE)
 	{
 		return;

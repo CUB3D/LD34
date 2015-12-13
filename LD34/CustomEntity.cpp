@@ -38,6 +38,17 @@ void Bullet::update()
 		{
 			LD34::player->handleCollision(this);
 		}
+
+		TilePos* inTile = LD34::isInTile(this->sprite->location.x, this->sprite->location.y);
+
+		if (inTile)
+		{
+			if (inTile->tile.id == 1)
+			{
+				LD34::map.setData(LD34::map.getData(inTile->x, inTile->y) + 1, inTile->x, inTile->y);
+				this->kill();
+			}
+		}
 	}
 	else
 	{
