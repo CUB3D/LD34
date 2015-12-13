@@ -5,6 +5,7 @@
 #include "LD34.h"
 #include "Timer.h"
 #include "Utils.h"
+#include <sstream>
 
 GameMode LD34::curMode = MODE_MOVE;
 
@@ -14,7 +15,7 @@ Player* LD34::player;
 
 Unknown::Graphics::Font* LD34::font;
 
-Unknown::Timer enemySpawn(1);
+Unknown::Timer enemySpawn(4);
 
 struct Tile
 {
@@ -52,8 +53,7 @@ void init()
 
 	LD34::player = new Player(UK_LOAD_SPRITE("res/player/Player.json"));
 
-
-	LD34::font = new Unknown::Graphics::Font(Unknown::Loader::loadImage("res/Font.png"), "abcdefghijklmnopqrstuvwxyz.,:!", 16);
+	LD34::font = new Unknown::Graphics::Font(Unknown::Loader::loadImage("res/Font.png"), "abcdefghijklmnopqrstuvwxyz.,:!1234567890", 16);
 
 	UK_ADD_KEY_LISTENER_EXTERNAL(onSwitchMode, "SWITCH_MODE");
 }
@@ -83,35 +83,61 @@ void render()
 		}
 	}
 
-	LD34::player->render();
-
 	LD34::font->drawString(LD34::curMode == GameMode::MODE_MOVE ? "mode: move" : "mode: build", 10, 0);
+
+	std::stringstream str;
+
+	str << LD34::player->getHealth();
+
+	LD34::font->drawString("lives: " + str.str(), 10, 16 + 2);
+
+	LD34::player->render();
 }
 
 void update()
 {
 	LD34::player->update();
 
+
 	if (enemySpawn.isTickComplete())
 	{
-		Unknown::Sprite* enemySpr = UK_LOAD_SPRITE("res/enemy/Enemy.json");
-
-		Enemy* enemy = new Enemy(enemySpr);
-
-		const Unknown::Dimension<int>* screenSize = GET_SCREEN_DIMENSIONS();
-
-		enemy->sprite->location.x = screenSize->width - 20;
-		enemy->sprite->location.y = screenSize->height - 16;
-
-		UK_REGISTER_ENTITY(enemy);
+		spawnEnemy();
 	}
+
+	for (auto a : Unknown::entitys)
+	{
+		if (a->getEntityID() == "BULLET")
+		{
+			a->sprite->bounds.size.width = 4;
+			a->sprite->bounds.size.height = 2;
+		}
+		else
+		{
+			a->sprite->bounds.size.width = 16;
+			a->sprite->bounds.size.height = 16;
+		}
+	}
+}
+
+void spawnEnemy()
+{
+	Unknown::Sprite* enemySpr = UK_LOAD_SPRITE("res/enemy/Enemy.json");
+
+	Enemy* enemy = new Enemy(enemySpr);
+
+	const Unknown::Dimension<int>* screenSize = GET_SCREEN_DIMENSIONS();
+
+	enemy->sprite->location.x = screenSize->width - 20;
+	enemy->sprite->location.y = screenSize->height - 16;
+
+	UK_REGISTER_ENTITY(enemy);
 }
 
 int main(int argc, char* argv[])
 {
-	init();
-
 	UK_CREATE_WINDOW();
+
+	init();
 
 	UK_RENDER(render);
 	UK_UPDATE(update);

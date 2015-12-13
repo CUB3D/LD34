@@ -34,5 +34,6 @@ public:
 };
 
 void onSwitchMode(Unknown::KeyEvent evnt);
+void spawnEnemy();
 
 #endif

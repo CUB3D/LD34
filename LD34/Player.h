@@ -11,6 +11,7 @@ public:
 	Player(Unknown::Sprite* sprite);
 	virtual void update() override;
 	void onShoot(Unknown::MouseEvent evnt);
+	virtual const std::string getEntityID() const override;
 	~Player();
 };
 
