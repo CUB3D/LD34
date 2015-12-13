@@ -17,28 +17,23 @@ Unknown::Graphics::Font* LD34::font;
 
 Unknown::Timer enemySpawn(4);
 
-struct Tile
-{
-	int id;
-	Unknown::Graphics::Image* img;
 
-	void render(int x, int y)
-	{
-		img->render(x * TILE_WIDTH + 64, (32 - y) * TILE_HEIGHT);
-	}
-};
+Tile LD34::tiles[5];
 
-
-Tile tiles[1];
-
-void init()
+void createTile(int id, std::string path)
 {
 	Tile tile;
 
-	tile.id = 0;
-	tile.img = new Unknown::Graphics::Image("res/tiles/Tile1.png");
+	tile.id = id;
+	tile.img = new Unknown::Graphics::Image(path.c_str());
 
-	tiles[0] = tile;
+	LD34::tiles[id] = tile;
+}
+
+void init()
+{
+	createTile(0, "res/tiles/Tile1.png");
+	createTile(1, "res/tiles/Tile2.png");
 
 	// empty the map
 
@@ -79,7 +74,7 @@ void render()
 		{
 			int tileID = LD34::map.getTileID(x, y);
 
-			tiles[tileID].render(x, y);
+			LD34::tiles[tileID].render(x, y);
 		}
 	}
 

@@ -41,7 +41,8 @@ void Player::update()
 	if (mPos.x > this->sprite->location.x)
 	{
 		this->sprite->setAngle(0);
-		((Unknown::Graphics::ImageSprite*)this->sprite)->image = spriteNorm;
+		((Unknown::Graphics::ImageSprite*)this->sprite)->image = 
+			spriteNorm;
 	}
 
 	if (mPos.x < this->sprite->location.x)
@@ -58,30 +59,43 @@ void Player::onShoot(Unknown::MouseEvent evnt)
 	if (!this->isAlive())
 		return;
 
-	if (LD34::curMode != GameMode::MODE_MOVE)
-	{
-		return;
-	}
 
-	if (evnt.mouseButton == Unknown::MouseButton::BUTTON_LEFT)
-	{
-		if (evnt.buttonState == Unknown::InputState::PRESSED)
+		if (evnt.mouseButton == Unknown::MouseButton::BUTTON_LEFT)
 		{
-			//shoot
-			Unknown::Sprite* bulletSpr = UK_LOAD_SPRITE("res/bullet/BulletSprite.json");
+			if (evnt.buttonState == Unknown::InputState::PRESSED)
+			{
+				if (LD34::curMode == GameMode::MODE_MOVE)
+				{
+					//shoot
+					Unknown::Sprite* bulletSpr = UK_LOAD_SPRITE("res/bullet/BulletSprite.json");
 
-			bool isLeft = this->sprite->getAngle() == 180;
+					bool isLeft = this->sprite->getAngle() == 180;
 
-			Bullet* bullet = new Bullet(bulletSpr, isLeft, false);
+					Bullet* bullet = new Bullet(bulletSpr, isLeft, false);
 
-			bullet->sprite->location.x = this->sprite->location.x + 16 - bullet->sprite->bounds.size.width;
-			bullet->sprite->location.y = this->sprite->location.y + 8;
+					bullet->sprite->location.x = this->sprite->location.x + 16 - bullet->sprite->bounds.size.width;
+					bullet->sprite->location.y = this->sprite->location.y + 8;
 
-			UK_REGISTER_ENTITY(bullet);
+					UK_REGISTER_ENTITY(bullet);
+				}
+				else
+				{
+					Unknown::Point<int> mPos;
 
+					GET_MOUSE_POS(mPos);
+
+					TilePos* inTile = LD34::isInTile(mPos.x, mPos.y);
+
+					if (inTile)
+					{
+						std::cout << inTile->x << " " << inTile->y << std::endl;
+
+						LD34::map.setTileID(1, inTile->x, inTile->y);
+					}
+				}
+			}
 		}
 	}
-}
 
 const std::string Player::getEntityID() const
 {
