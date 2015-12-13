@@ -60,71 +60,71 @@ void Player::onShoot(Unknown::MouseEvent evnt)
 		return;
 
 
-		if (evnt.mouseButton == Unknown::MouseButton::BUTTON_LEFT)
+	if (evnt.mouseButton == Unknown::MouseButton::BUTTON_LEFT)
+	{
+		if (evnt.buttonState == Unknown::InputState::PRESSED)
 		{
-			if (evnt.buttonState == Unknown::InputState::PRESSED)
+			if (LD34::curMode == GameMode::MODE_MOVE)
 			{
-				if (LD34::curMode == GameMode::MODE_MOVE)
+				//shoot
+				Unknown::Sprite* bulletSpr = UK_LOAD_SPRITE("res/bullet/BulletSprite.json");
+
+				bool isLeft = this->sprite->getAngle() == 180;
+
+				Bullet* bullet = new Bullet(bulletSpr, isLeft, false);
+
+				bullet->sprite->location.x = this->sprite->location.x + 16 - bullet->sprite->bounds.size.width;
+				bullet->sprite->location.y = this->sprite->location.y + 8;
+
+				UK_REGISTER_ENTITY(bullet);
+			}
+			else
+			{
+				if (!placing)
 				{
-					//shoot
-					Unknown::Sprite* bulletSpr = UK_LOAD_SPRITE("res/bullet/BulletSprite.json");
-
-					bool isLeft = this->sprite->getAngle() == 180;
-
-					Bullet* bullet = new Bullet(bulletSpr, isLeft, false);
-
-					bullet->sprite->location.x = this->sprite->location.x + 16 - bullet->sprite->bounds.size.width;
-					bullet->sprite->location.y = this->sprite->location.y + 8;
-
-					UK_REGISTER_ENTITY(bullet);
+					placing = &LD34::tiles[0];
 				}
-				else
+
+				Unknown::Point<int> mPos;
+
+				GET_MOUSE_POS(mPos);
+
+				for (int i = 0; i < TILE_COUNT; i++)
 				{
-					if (!placing)
+					Tile a = LD34::tiles[i + 1];
+					a.img->render(i * TILE_WIDTH + 10, 37);
+
+					int butX = i * TILE_WIDTH + 10;
+					int butY = 37;
+
+					if (mPos.x > butX && mPos.x < butX + TILE_WIDTH)
 					{
-						placing = &LD34::tiles[0];
-					}
-
-					Unknown::Point<int> mPos;
-
-					GET_MOUSE_POS(mPos);
-
-					for (int i = 0; i < TILE_COUNT; i++)
-					{
-						Tile a = LD34::tiles[i + 1];
-						a.img->render(i * TILE_WIDTH + 10, 37);
-
-						int butX = i * TILE_WIDTH + 10;
-						int butY = 37;
-
-						if (mPos.x > butX && mPos.x < butX + TILE_WIDTH)
+						if (mPos.y > butY && mPos.y < butY + TILE_HEIGHT)
 						{
-							if (mPos.y > butY && mPos.y < butY + TILE_HEIGHT)
-							{
-								placing = &LD34::tiles[i + 1];
-							}
+							placing = &LD34::tiles[i + 1];
 						}
 					}
+				}
 
-					TilePos* inTile = LD34::isInTile(mPos.x, mPos.y);
+				TilePos* inTile = LD34::isInTile(mPos.x, mPos.y);
 
-					if (inTile)
+				if (inTile)
+				{
+					std::cout << inTile->x << " " << inTile->y << std::endl;
+
+					if (LD34::buy(placing->cost))
 					{
-						std::cout << inTile->x << " " << inTile->y << std::endl;
-
-						if (LD34::buy(placing->cost))
-						{
-							LD34::map.setTileID(placing->id, inTile->x, inTile->y);
-						}
-						else
-						{
-							std::cout << "Cannot afford" << std::endl;
-						}
+						LD34::map.setTileID(placing->id, inTile->x, inTile->y);
+					}
+					else
+					{
+						std::cout << "Cannot afford" << std::endl;
 					}
 				}
 			}
 		}
 	}
+}
 
 const std::string Player::getEntityID() const
 {
