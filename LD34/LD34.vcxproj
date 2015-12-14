@@ -71,16 +71,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>B:\Git\LD34\Unknown++\lib\x86;B:\Git\LD34\Libs\SDL2_image\lib\x86;B:\Git\LD34\Libs\SDL2\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>B:\Git\LD34\Unknown++\include;B:\Git\LD34\Libs\SDL2_image\include;B:\Git\LD34\Libs\SDL2\include;B:\Git\LD34\Libs\RapidJSON\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Callum\Desktop\ld34\LD34\Unknown++\lib\x86;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2_image\lib\x86;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Callum\Desktop\ld34\LD34\Unknown++\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2_image\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\RapidJSON\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>B:\Git\LD34\Unknown++\include;B:\Git\LD34\Libs\SDL2_image\include;B:\Git\LD34\Libs\SDL2\include;B:\Git\LD34\Libs\RapidJSON\include;$(IncludePath)</IncludePath>
-    <LibraryPath>B:\Git\LD34\Libs\SDL2\lib\x86;B:\Git\LD34\Libs\SDL2_image\lib\x86;B:\Git\LD34\Unknown++\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Callum\Desktop\ld34\LD34\Unknown++\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2_image\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\RapidJSON\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2\lib\x86;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2_image\lib\x86;C:\Users\Callum\Desktop\ld34\LD34\Unknown++\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>B:\Git\LD34\Unknown++\include;B:\Git\LD34\Libs\SDL2_image\include;B:\Git\LD34\Libs\SDL2\include;B:\Git\LD34\Libs\RapidJSON\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Callum\Desktop\ld34\LD34\Unknown++\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2_image\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\SDL2\include;C:\Users\Callum\Desktop\ld34\LD34\Libs\RapidJSON\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>

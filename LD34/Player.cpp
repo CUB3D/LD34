@@ -111,7 +111,7 @@ void Player::onShoot(Unknown::MouseEvent evnt)
 
 				if (inTile)
 				{
-					std::cout << inTile->x << " " << inTile->y << std::endl;
+					//std::cout << inTile->x << " " << inTile->y << std::endl;
 
 					if (LD34::buy(placing->cost))
 					{

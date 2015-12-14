@@ -16,7 +16,9 @@ Player* LD34::player;
 
 Unknown::Graphics::Font* LD34::font;
 
-Unknown::Timer enemySpawn(3);
+Unknown::Timer enemySpawn(5);
+
+int spawns = 0;
 
 int LD34::money = 0;
 
@@ -125,11 +127,21 @@ void update()
 	if (enemySpawn.isTickComplete())
 	{
 		spawnEnemy();
+
+		int waveLength = 20;
+
+		if (spawns % waveLength == 0)
+		{
+			int wave = spawns / waveLength;
+
+			enemySpawn = Unknown::Timer((int)std::fmax(3 - wave, 1));
+		}
 	}
+
 
 	for (auto a : Unknown::entitys)
 	{
-		if (a->getEntityID() == "BULLET")
+		if (a->getEntityID() == "BULLET_F")
 		{
 			a->sprite->bounds.size.width = 4;
 			a->sprite->bounds.size.height = 2;
@@ -158,7 +170,6 @@ void update()
 
 			if (tileID == 2) // shot blocker
 			{
-				std::cout << data << std::endl;
 				if (data >= 10)
 				{
 					LD34::map.setTileID(0, x, y);
@@ -166,18 +177,17 @@ void update()
 				else
 				{
 					// block shots
-					std::cout << "Test" << std::endl;
-
 					for (auto a : Unknown::entitys)
 					{
-						if (a->getEntityID() == "BULLET")
+						if (a->getEntityID() == "BULLET_F")
 						{
 							Bullet* b = (Bullet*)a;
 
-							if (b->enemy)
+							if (b->enemy && b->isAlive())
 							{
-								a->kill();
-								LD34::map.setData(LD34::map.getData(x, y) + 1, x, y);
+								b->kill();
+
+								LD34::map.setData(data + 1, x, y);
 							}
 						}
 					}
@@ -199,6 +209,8 @@ void spawnEnemy()
 	enemy->sprite->location.y = screenSize->height - 16;
 
 	UK_REGISTER_ENTITY(enemy);
+
+	spawns++;
 }
 
 int main(int argc, char* argv[])
