@@ -88,7 +88,7 @@ void Enemy::update()
 		return;
 	}
 
-	if (shoot.isTickComplete())
+	if (rand() % 120 == 0 || shoot.isTickComplete())
 	{
 		//shoot
 		Unknown::Sprite* bulletSpr = UK_LOAD_SPRITE("res/bullet/BulletSprite.json");

@@ -42,7 +42,7 @@ struct TilePos
 	Tile tile;
 };
 
-#define TILE_COUNT 1
+#define TILE_COUNT 2
 
 class Player;
 

@@ -16,7 +16,7 @@ Player* LD34::player;
 
 Unknown::Graphics::Font* LD34::font;
 
-Unknown::Timer enemySpawn(4);
+Unknown::Timer enemySpawn(3);
 
 int LD34::money = 0;
 
@@ -40,6 +40,7 @@ void init()
 
 	createTile(0, "res/tiles/Tile1.png", 0); // never placed by player
 	createTile(1, "res/tiles/Tile2.png", 10); // wall tile
+	createTile(2, "res/tiles/Tile3.png", 15); // Shot blocker
 
 	// empty the map
 
@@ -80,17 +81,8 @@ void render()
 		for (int y = LD34::map.mapSize->height - 1; y > 0; y--)
 		{
 			int tileID = LD34::map.getTileID(x, y);
-			int data = LD34::map.getData(x, y);
 
 			LD34::tiles[tileID].render(x, y);
-
-			if (tileID == 1)
-			{
-				if (data >= 5)
-				{
-					LD34::map.setTileID(0, x, y);
-				}
-			}
 		}
 	}
 
@@ -146,6 +138,51 @@ void update()
 		{
 			a->sprite->bounds.size.width = 16;
 			a->sprite->bounds.size.height = 16;
+		}
+	}
+
+	for (int x = 0; x < LD34::map.mapSize->width; x++)
+	{
+		for (int y = LD34::map.mapSize->height - 1; y > 0; y--)
+		{
+			int tileID = LD34::map.getTileID(x, y);
+			int data = LD34::map.getData(x, y);
+
+			if (tileID == 1)
+			{
+				if (data >= 5)
+				{
+					LD34::map.setTileID(0, x, y);
+				}
+			}
+
+			if (tileID == 2) // shot blocker
+			{
+				std::cout << data << std::endl;
+				if (data >= 10)
+				{
+					LD34::map.setTileID(0, x, y);
+				}
+				else
+				{
+					// block shots
+					std::cout << "Test" << std::endl;
+
+					for (auto a : Unknown::entitys)
+					{
+						if (a->getEntityID() == "BULLET")
+						{
+							Bullet* b = (Bullet*)a;
+
+							if (b->enemy)
+							{
+								a->kill();
+								LD34::map.setData(LD34::map.getData(x, y) + 1, x, y);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
